@@ -6,43 +6,54 @@ using System.Threading.Tasks;
 
 namespace BinarySearchTrees
 {
-    class BinaryTree
+    class BinaryTree<T> where T:IComparable
     {
-        public Node left;
-        public Node right;
-        public void Insert(int data)
+        public T NodeData { get; set; }
+        public BinaryTree<T> LeftTree { get; set; }
+        public BinaryTree<T> RightTree { get; set; }
+        public BinaryTree(T nodeData) // creating the constructer to intialise the vlaues
         {
-            Node newnode = new Node(data);
-
-            // Pointer to start traversing from root andtraverses downward path to search where the new node to be inserted
-            Node x = null;
-
-            // Pointer y maintains the trailing pointer of x
-            Node y = null;
-
-            while (x != null)
+            this.NodeData = nodeData;
+            this.LeftTree = null;
+            this.RightTree = null;
+        }
+        int leftCount = 0, rightCount = 0;
+        bool result = false;
+        public void Insert(T item) // this method is used fot inserting the values to the binary tree
+        {
+            T currentNodeValue = this.NodeData;
+            if ((currentNodeValue.CompareTo(item)) > 0)
             {
-                y = x;
-                if (data < x.data)
-                    x = x.left;
+                if (this.LeftTree == null)
+                    this.LeftTree = new BinaryTree<T>(item);
                 else
-                    x = x.right;
+                    this.LeftTree.Insert(item);
             }
-
-            // If the root is null i.e the tree is empty the new node is the root node
-            if (y == null)
-                y = newnode;
-
-            // If the new key is less then the left node data Assign the new node to be its left child
-            else if (data < y.data)
-                y.left = newnode;
-
-            // else assign the new node its right child
             else
-                y.right = newnode;
-
-            // Returns the pointer where the new node is inserted
-            Console.WriteLine(y.data);
+            {
+                if (this.RightTree == null)
+                    this.RightTree = new BinaryTree<T>(item);
+                else
+                    this.RightTree.Insert(item);
+            }
+        }
+        public void Display() // this method is used for the to display the vlaues un the tree
+        {
+            if (this.LeftTree != null)
+            {
+                this.leftCount++;
+                this.LeftTree.Display();
+            }
+            Console.WriteLine(this.NodeData.ToString());
+            if (this.RightTree != null)
+            {
+                this.rightCount++;
+                this.RightTree.Display();
+            }
+        }
+        public void GetSize() // this methos is for getting the size of the binary tree
+        {
+            Console.WriteLine("Size"+" "+(1+ this.leftCount + this.rightCount));
         }
     }
 }
